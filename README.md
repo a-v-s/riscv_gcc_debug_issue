@@ -35,3 +35,23 @@ ERROR: printing fdes fails. DW_DLE_DF_FRAME_DECODING_ERROR(193)  Attempting to c
 There were 3 DWARF errors reported: see ERROR above.
 ```
 ERRORs show up for the bad elf file, which has assembly listing generated during the build
+
+## Versions 
+
+These tests have been taken with the following versions
+
+```
+$ riscv-none-elf-gcc --version 
+riscv-none-elf-gcc (xPack GNU RISC-V Embedded GCC x86_64) 12.2.0
+Copyright (C) 2022 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ riscv-none-elf-as --version 
+GNU assembler (xPack GNU RISC-V Embedded GCC x86_64) 2.38
+Copyright (C) 2022 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or later.
+This program has absolutely no warranty.
+This assembler was configured for a target of `riscv-none-elf'.
+```
