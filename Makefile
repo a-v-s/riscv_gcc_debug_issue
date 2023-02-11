@@ -34,7 +34,7 @@ test.good.elf: main.good.o startup.good.o
 
 ################################################################################
 main.bad.o:
-	riscv-none-elf-gcc -c main.c -o main.bad.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3 -Wa,-adlms=main.bad.lst
+	riscv-none-elf-gcc -c main.c -o main.bad.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3 -Wa,-a=main.bad.lst
 
 startup.bad.o:
 	riscv-none-elf-gcc -c startup.S -o startup.bad.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3
