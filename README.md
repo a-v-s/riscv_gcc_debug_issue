@@ -12,7 +12,7 @@ The issue seems to be triggered when
 
 ### Building 
 ```
-]$ make test.bad.elf 
+$ make test.bad.elf 
 riscv-none-elf-gcc -c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 -O0 -g3 -Wall -fdata-sections -ffunction-sections -MMD -MP -MF"main.bad.c.d" -Wa,-a,-ad,-alms=main.bad.lst main.c -o main.bad.o
 riscv-none-elf-gcc -x assembler-with-cpp -c  -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2   -O0 -g3 -Wall -fdata-sections -ffunction-sections  -MMD -MP -MF"startup.bad.S.d" startup.S -o startup.bad.o
 riscv-none-elf-gcc main.bad.o startup.bad.o -nostartfiles -Wl,--no-relax -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 --specs=nosys.specs --specs=nano.specs -Ttest.ld   -Wl,--gc-sections -Wl,-Map=test.bad.map,--cref -o test.bad.elf
@@ -33,7 +33,7 @@ The DWARF has errors
 
 ### Building
 ```
-[andre@mortar clean_case]$ make test.nolst.elf 
+$ make test.nolst.elf 
 riscv-none-elf-gcc -c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 -O0 -g3 -Wall -fdata-sections -ffunction-sections -MMD -MP -MF"main.nolst.c.d" main.c -o main.nolst.o
 riscv-none-elf-gcc -x assembler-with-cpp -c  -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2   -O0 -g3 -Wall -fdata-sections -ffunction-sections  -MMD -MP -MF"startup.nolst.S.d" startup.S -o startup.nolst.o
 riscv-none-elf-gcc main.nolst.o startup.nolst.o -nostartfiles -Wl,--no-relax -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 --specs=nosys.specs --specs=nano.specs -Ttest.ld   -Wl,--gc-sections -Wl,-Map=test.nolst.map,--cref -o test.nolst.elf
@@ -41,7 +41,7 @@ riscv-none-elf-gcc main.nolst.o startup.nolst.o -nostartfiles -Wl,--no-relax -ma
 
 ### Testing the DWARF
 ```
-[andre@mortar clean_case]$ dwarfdump test.nolst.elf  | grep ERROR 
+$ dwarfdump test.nolst.elf  | grep ERROR 
 ```
 
 The DWARF has no errors
