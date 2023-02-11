@@ -8,40 +8,30 @@ The issue seems to be triggered when
 * assembly listing is enabled when compiling a C file
 * a function is passed a pointer as parameter
 
-## Known bad test case
 
-### Building 
-```
-$ make test.bad.elf 
-riscv-none-elf-gcc -c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 -O0 -g3 -Wall -fdata-sections -ffunction-sections -MMD -MP -MF"main.bad.c.d" -Wa,-a,-ad,-alms=main.bad.lst main.c -o main.bad.o
-riscv-none-elf-gcc -x assembler-with-cpp -c  -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2   -O0 -g3 -Wall -fdata-sections -ffunction-sections  -MMD -MP -MF"startup.bad.S.d" startup.S -o startup.bad.o
-riscv-none-elf-gcc main.bad.o startup.bad.o -nostartfiles -Wl,--no-relax -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 --specs=nosys.specs --specs=nano.specs -Ttest.ld   -Wl,--gc-sections -Wl,-Map=test.bad.map,--cref -o test.bad.elf
+## Building
+``` 
+make
+riscv-none-elf-gcc -c main.c -o main.good.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3
+riscv-none-elf-gcc -c startup.S -o startup.good.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3
+riscv-none-elf-gcc main.good.o startup.good.o -o test.good.elf -T test.ld  --specs=nosys.specs --specs=nano.specs -nostartfiles -Wl,--no-relax -Wl,--gc-sections -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3 -Wl,-Map=test.good.map
+riscv-none-elf-gcc -c main.c -o main.bad.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3 -Wa,-a=main.bad.lst
+riscv-none-elf-gcc -c startup.S -o startup.bad.o -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3
+riscv-none-elf-gcc main.bad.o startup.bad.o -o test.bad.elf -T test.ld  --specs=nosys.specs --specs=nano.specs -nostartfiles -Wl,--no-relax -Wl,--gc-sections -march=rv32imac -mabi=ilp32 -mcmodel=medlow  -fdata-sections -ffunction-sections  -misa-spec=2.2 -O0 -g3 -Wl,-Map=test.bad.map
 ```
 
-### Testing the DWARF
+## Testing
 ```
-$ dwarfdump test.bad.elf  | grep ERROR 
+$ dwarfdump test.good.elf  | grep ERROR 
+```
+No ERROR for the good elf file, which had no assembly listed generated during the build
+
+
+```
+$ dwarfdump test.bad.elf | grep ERROR
 ERROR: on getting fde details for fde row for address 0x00000006
 ERROR: Printing fde 0 fails. Error DW_DLE_DF_FRAME_DECODING_ERROR(193)
 ERROR: printing fdes fails. DW_DLE_DF_FRAME_DECODING_ERROR(193)  Attempting to continue. 
 There were 3 DWARF errors reported: see ERROR above.
 ```
-
-The DWARF has errors
-
-## The test case with assembly listing generation removed
-
-### Building
-```
-$ make test.nolst.elf 
-riscv-none-elf-gcc -c -march=rv32imac -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 -O0 -g3 -Wall -fdata-sections -ffunction-sections -MMD -MP -MF"main.nolst.c.d" main.c -o main.nolst.o
-riscv-none-elf-gcc -x assembler-with-cpp -c  -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2   -O0 -g3 -Wall -fdata-sections -ffunction-sections  -MMD -MP -MF"startup.nolst.S.d" startup.S -o startup.nolst.o
-riscv-none-elf-gcc main.nolst.o startup.nolst.o -nostartfiles -Wl,--no-relax -march=rv32imac   -mabi=ilp32 -mcmodel=medlow -misa-spec=2.2 --specs=nosys.specs --specs=nano.specs -Ttest.ld   -Wl,--gc-sections -Wl,-Map=test.nolst.map,--cref -o test.nolst.elf
-```
-
-### Testing the DWARF
-```
-$ dwarfdump test.nolst.elf  | grep ERROR 
-```
-
-The DWARF has no errors
+ERRORs show up for the bad elf file, which has assembly listing generated during the build
